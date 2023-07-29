@@ -8,7 +8,10 @@ import { WinnerModal } from "./components/WinnerModal.jsx"
 
 function App() {
 
-  const [board, setBoard] = useState(Array(9).fill(null))
+  const [board, setBoard] = useState(() => {
+    const boardFromStorage = window.localStorage.getItem('board')
+    return boardFromStorage ? JSON.parse(boardFromStorage) : Array(9).fill(null)
+  })
   const [turn, setTurn] = useState(TURNS.X)
   const [winner, setWinner] = useState(null)
 
@@ -27,6 +30,9 @@ function App() {
 
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
     setTurn(newTurn)
+    //Guarda partida
+    window.localStorage.setItem('board', JSON.stringify(newBoard))
+    window.localStorage.setItem('turn', turn)
     //Revisar si hay ganador
     const newWinner = checkWinnerFrom(newBoard)
     if(newWinner) {
